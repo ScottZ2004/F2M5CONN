@@ -1,4 +1,4 @@
--GoNoGo presentatie
--Tussen presentatie
--Eindpresentatie
--Link naar Trelloboard
+- GoNoGo presentatie
+- Tussen presentatie
+- Eindpresentatie
+- Link naar Trelloboard
