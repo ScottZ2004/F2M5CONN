@@ -9,5 +9,5 @@ rug houding. En dat willen we graag voorkomen.
 
 ### Contributors:
 ### Scott van den Broek
-### Becky van der Meulen
+### Becky van der Meulen <3
 >>>>>>> 9e150b0e26deb0086983b1b4c0955471a041a724
