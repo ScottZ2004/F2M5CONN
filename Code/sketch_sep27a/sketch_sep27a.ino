@@ -9,8 +9,11 @@
   copies or substantial portions of the Software.
 **/
 
-const int trigPin = D5; // 12;
-const int echoPin = D6; // 14;
+const int trigPin = D5; // 8;
+const int echoPin = D6; // 7;
+const int LedR = D3; // led red
+const int LedB = D2; // led blue
+
 
 //define sound velocity in cm/uS
 #define SOUND_VELOCITY 0.034
@@ -19,11 +22,14 @@ const int echoPin = D6; // 14;
 long duration;
 float distanceCm;
 
+int timeRunning = 0;
 
 void setup() {
   Serial.begin(115200); // Starts the serial communication
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
   pinMode(echoPin, INPUT); // Sets the echoPin as an Input
+  pinMode(LedR, OUTPUT); // Sets the LedR as an Output
+  pinMode(LedB, OUTPUT); // Sets the LedB as an Output
 }
 
 void loop() {
@@ -50,12 +56,24 @@ void loop() {
   Serial.println(distanceCm);
   
   delay(1000);
-}void setup() {
-  // put your setup code here, to run once:
-
+  checkBehindDesk();
+  countTimeRunning();
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-
+void checkBehindDesk(){
+  if(distanceCm < 100){
+    digitalWrite(LedB, HIGH);
+    digitalWrite(LedR, LOW);
+  }else{
+    digitalWrite(LedB, LOW);
+    digitalWrite(LedR, HIGH);
+  }
 }
+
+void countTimeRunning(){
+  timeRunning += 1;
+  Serial.print("Tijd in seconden: ");
+  Serial.println(timeRunning);
+}
+
+//hier komt nog een void die gaat kijken of er langer dan ... seconden meer dan ... cm afstand is geweest tussen mens en Ultrason
