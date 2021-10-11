@@ -56,6 +56,7 @@ void loop() {
   Serial.println(distanceCm);
   
   delay(1000);
+<<<<<<< HEAD
   checkBehindDesk();
   countTimeRunning();
 }
@@ -74,6 +75,8 @@ void countTimeRunning(){
   timeRunning += 1;
   Serial.print("Tijd in seconden: ");
   Serial.println(timeRunning);
+=======
+>>>>>>> c7e26654021b20a89cf77de0c52f4f82eb6313db
 }
 
 //hier komt nog een void die gaat kijken of er langer dan ... seconden meer dan ... cm afstand is geweest tussen mens en Ultrason
