@@ -24,12 +24,17 @@ float distanceCm;
 
 int timeRunning = 0;
 
+bool timerHasStarted = false;
+
 void setup() {
   Serial.begin(115200); // Starts the serial communication
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
   pinMode(echoPin, INPUT); // Sets the echoPin as an Input
   pinMode(LedR, OUTPUT); // Sets the LedR as an Output
   pinMode(LedB, OUTPUT); // Sets the LedB as an Output
+
+  // Set begin value of timer if person sits behind desk
+  
 }
 
 void loop() {
@@ -48,35 +53,51 @@ void loop() {
   // Calculate the distance
   distanceCm = duration * SOUND_VELOCITY/2;
 
-  // Convert to inches
-  
-
   // Prints the distance on the Serial Monitor
   Serial.print("Distance (cm): ");
   Serial.println(distanceCm);
+
+  countTimeRunning();
+  checkIfSecondsBehindDesk(10);
   
   delay(1000);
-<<<<<<< HEAD
-  checkBehindDesk();
-  countTimeRunning();
-}
-
-void checkBehindDesk(){
-  if(distanceCm < 100){
-    digitalWrite(LedB, HIGH);
-    digitalWrite(LedR, LOW);
-  }else{
-    digitalWrite(LedB, LOW);
-    digitalWrite(LedR, HIGH);
-  }
+  
 }
 
 void countTimeRunning(){
   timeRunning += 1;
   Serial.print("Tijd in seconden: ");
   Serial.println(timeRunning);
-=======
->>>>>>> c7e26654021b20a89cf77de0c52f4f82eb6313db
+}
+
+void blueLedOn(){
+  digitalWrite(LedB, HIGH); // Sets blue led to on
+  digitalWrite(LedR, LOW);  // Sets red led to off
+}
+
+void redLedOn(){
+  digitalWrite(LedR, HIGH); // Sets red led to on
+  digitalWrite(LedB, LOW);  // Sets blue led to off  
 }
 
 //hier komt nog een void die gaat kijken of er langer dan ... seconden meer dan ... cm afstand is geweest tussen mens en Ultrason
+void checkIfSecondsBehindDesk(long amountOfSecondsBehindDesk){
+  
+  if(distanceCm < 100 && timerHasStarted == false){
+    timerHasStarted = true;
+    blueLedOn();
+    timeRunning = 0;
+  }else if(distanceCm > 100){
+    redLedOn();
+    timerHasStarted = false;
+  }else if(timeRunning >= amountOfSecondsBehindDesk){
+    redLedOn();
+    
+    Serial.print("------------------");
+    Serial.print("Je zit te lang achter je computer!");
+    Serial.print("------------------");
+    if(distanceCm > 100){
+      timerHasStarted = false;
+    }
+  }
+}
