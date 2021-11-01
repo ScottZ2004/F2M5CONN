@@ -23,8 +23,10 @@ long duration;
 float distanceCm;
 
 int timeRunning = 0;
+int timeRunningBetween = 0;
 
 bool timerHasStarted = false;
+bool timerBetweenHasStarted = false;
 
 void setup() {
   Serial.begin(115200); // Starts the serial communication
@@ -58,7 +60,9 @@ void loop() {
   Serial.println(distanceCm);
 
   countTimeRunning();
-  checkIfSecondsBehindDesk(10);
+  countBetweenTimeRunning();
+  
+  checkIfSecondsBehindDesk(10, 5);
   
   delay(1000);
   
@@ -68,6 +72,10 @@ void countTimeRunning(){
   timeRunning += 1;
   Serial.print("Tijd in seconden: ");
   Serial.println(timeRunning);
+}
+
+void countBetweenTimeRunning(){
+  timeRunningBetween += 1;
 }
 
 void blueLedOn(){
@@ -81,15 +89,12 @@ void redLedOn(){
 }
 
 //hier komt nog een void die gaat kijken of er langer dan ... seconden meer dan ... cm afstand is geweest tussen mens en Ultrason
-void checkIfSecondsBehindDesk(long amountOfSecondsBehindDesk){
+void checkIfSecondsBehindDesk(int amountOfSecondsBehindDesk, int amountOfSecondsBetween){
   
   if(distanceCm < 100 && timerHasStarted == false){
     timerHasStarted = true;
     blueLedOn();
     timeRunning = 0;
-  }else if(distanceCm > 100){
-    redLedOn();
-    timerHasStarted = false;
   }else if(timeRunning >= amountOfSecondsBehindDesk){
     redLedOn();
     
@@ -97,7 +102,20 @@ void checkIfSecondsBehindDesk(long amountOfSecondsBehindDesk){
     Serial.print("Je zit te lang achter je computer!");
     Serial.print("------------------");
     if(distanceCm > 100){
-      timerHasStarted = false;
+      if(!timerBetweenHasStarted){
+        timeRunningBetween = 0;
+        timerBetweenHasStarted = true;
+      }else if(timeRunningBetween >= amountOfSecondsBetween){
+        timerHasStarted = false;
+        timerBetweenHasStarted = false;
+      }else{
+        Serial.print("------------------");
+        Serial.print("Je moet nog wat langer staan voor dat je weer kan zitten!");
+        Serial.print("------------------");
+      }
     }
+  }else if(distanceCm > 100){
+    redLedOn();
+    timerHasStarted = false;
   }
 }
